@@ -18,6 +18,24 @@ Input CSV must contain the following columns:
 - `url`: The bookmark URL
 - `excerpt`: A description or excerpt of the bookmark content
 
+## Customization
+
+The categorization structure is fully customizable. Modify the `category_structure` in `create_classification_prompt()` to match your preferences:
+
+```python
+category_structure = """
+Categories:
+1. Your Category
+    ├── Subcategory 1
+    ├── Subcategory 2
+    └── Subcategory 3
+
+2. Another Category
+    ├── Custom Subcategory
+    └── More Subcategories
+"""
+```
+
 ## Setup
 
 1. Clone repository
