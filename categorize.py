@@ -22,13 +22,14 @@ def create_classification_prompt(bookmark: Dict) -> str:
     2. Mobile Development
         ├── Blogs
         ├── Tutorials
-        └── Resources
+        ├── Resources
+        └── Tools
 
     3. UI Libraries
 
     4. UI Inspiration
-        |- General
-        |- Aggregators
+        ├── General
+        └── Aggregators
 
     5. Icon Libraries
 
@@ -90,7 +91,10 @@ def create_classification_prompt(bookmark: Dict) -> str:
         ├── Resources
         └── Tools
 
-    17. Others
+    17. Community
+        └── Profiles (e.g. LinkedIn, X, Github, etc.)
+
+    18. Uncategorized (Anything that doesn't fit into the other categories, but first try to find a category that is close, then if it doesn't fit into any category, then it is Uncategorized)
     """
 
     prompt = f"""Please analyze the following bookmark and suggest an appropriate hierarchical category path based on the provided category structure.
@@ -133,6 +137,9 @@ def process_bookmarks(input_file: str, output_file: str):
         input_df = pd.read_csv(input_file)
         unique_categories = set()
         
+        if 'folder' not in input_df.columns:
+            input_df['folder'] = None
+        
         processed_urls = set()
         if os.path.exists(output_file):
             output_df = pd.read_csv(output_file)
@@ -161,9 +168,10 @@ def process_bookmarks(input_file: str, output_file: str):
             category = get_category_from_openai(bookmark)
             unique_categories.add(category)
             
-            row['folder'] = category
+            new_row = row.copy()
+            new_row['folder'] = category
             
-            row.to_frame().T.to_csv(output_file, mode='a', header=False, index=False)
+            new_row.to_frame().T.to_csv(output_file, mode='a', header=False, index=False)
             
             print(f"Categorized as: {category}")
             print("Row written to output file")
